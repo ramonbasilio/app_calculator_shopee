@@ -39,7 +39,7 @@ class _PageInicialState extends State<PageInicial> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'Shopee',
+                  'Shopee Calculadora',
                   style: TextStyle(
                     fontSize: 30,
                     color: Colors.white,
