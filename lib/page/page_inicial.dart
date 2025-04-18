@@ -38,6 +38,7 @@ class _PageInicialState extends State<PageInicial> {
               padding: const EdgeInsets.all(15.0),
               child: Container(
                 width: 500,
+                height: 1000,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 0.9),
                   borderRadius: BorderRadius.circular(10),
