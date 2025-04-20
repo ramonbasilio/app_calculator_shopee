@@ -27,14 +27,14 @@ class _ShopeePageState extends State<ShopeePage> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(10),
                   child: Container(
                     width: double.infinity, // Ajusta à largura da tela
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.white, width: 0.9),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +47,7 @@ class _ShopeePageState extends State<ShopeePage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: const Text(
@@ -86,7 +86,7 @@ class _ShopeePageState extends State<ShopeePage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: const Text(
@@ -125,7 +125,7 @@ class _ShopeePageState extends State<ShopeePage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: ElevatedButton(
@@ -149,7 +149,7 @@ class _ShopeePageState extends State<ShopeePage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         Container(
                           width: double.infinity,
                           height: 150,
