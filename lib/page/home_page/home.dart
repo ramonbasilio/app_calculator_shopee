@@ -41,16 +41,82 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(child: widgetOptions.elementAt(selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Shopee',
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: <BottomNavigationBarItem>[
+             BottomNavigationBarItem(
+            icon: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30), // Deixa redondo
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                  5,
+                ), // Espaço interno para a imagem
+                child: Image.asset('lib/assets/shopee.png'),
+              ),
+            ),
+            label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: 'Mercado Livre',
+            icon: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30), // Deixa redondo
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                  5,
+                ), // Espaço interno para a imagem
+                child: Image.asset('lib/assets/mercado_livre.png'),
+              ),
+            ),
+            label: '',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Amazon'),
+                   BottomNavigationBarItem(
+            icon: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30), // Deixa redondo
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                  5,
+                ), // Espaço interno para a imagem
+                child: Image.asset('lib/assets/amazon.png'),
+              ),
+            ),
+            label: '',
+          ),
         ],
         currentIndex: selectedIndex,
         selectedItemColor: Colors.white,

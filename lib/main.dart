@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_v1/page/home_page/home.dart';
 import 'package:flutter_application_v1/page/shopee_page/shopee_page.dart';
-import 'package:flutter_application_v1/page/shopee_page.dart';
 
 void main() {
   runApp(const MyApp());

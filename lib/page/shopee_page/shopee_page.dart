@@ -150,7 +150,7 @@ class _ShopeePageState extends State<ShopeePage> {
                   const SizedBox(height: 20),
                   Container(
                     width: 500,
-                    height: 180,
+                    height: 150,
                     decoration: BoxDecoration(
                       color: Color(0xFF332D2D),
                       border: Border.all(color: Color(0xFF332D2D), width: 0.9),
@@ -171,7 +171,7 @@ class _ShopeePageState extends State<ShopeePage> {
                           fit: BoxFit.scaleDown,
                           child: Text(
                             NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(result),
-                            style: TextStyle(fontSize: 70, color: Colors.white),
+                            style: TextStyle(fontSize: 60, color: Colors.white),
                           ),
                         ),
                       ],
