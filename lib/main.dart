@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_v1/page/page_inicial.dart';
+import 'package:flutter_application_v1/page/home_page/home.dart';
+import 'package:flutter_application_v1/page/shopee_page/shopee_page.dart';
 import 'package:flutter_application_v1/page/shopee_page.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: PageInicial(),
+      home: HomePage(),
     );
   }
 }
