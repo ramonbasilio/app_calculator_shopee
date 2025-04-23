@@ -31,6 +31,7 @@ class _ShopeePageState extends State<ShopeePage> {
                   padding: const EdgeInsets.all(10),
                   child: Center(
                     child: Container(
+                      height: isMobile ? null : MediaQuery.of(context).size.height * 0.85,
                       width: isMobile ? double.infinity : 500, // Ajusta à largura da tela
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 0.9),
@@ -152,6 +153,7 @@ class _ShopeePageState extends State<ShopeePage> {
                             ),
                           ),
                           const SizedBox(height: 10),
+                          !isMobile ? Expanded(child: SizedBox()) : SizedBox(height: 10),
                           Container(
                             width: double.infinity,
                             height: 150,
