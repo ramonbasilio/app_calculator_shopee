@@ -35,7 +35,7 @@ class _HomePageTestState extends State<HomePageTest> {
       backgroundColor: Color(0xFF17181C),
       appBar: AppBar(
         title: const Text(
-          'Calculadora de Taxas - TESTE',
+          'Calculadora de Taxas',
           style: TextStyle(
             color: Colors.white,
             fontSize: 30,
@@ -47,6 +47,7 @@ class _HomePageTestState extends State<HomePageTest> {
       ),
       body: Center(child: widgetOptions.elementAt(selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
+      
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
         showUnselectedLabels: false,
