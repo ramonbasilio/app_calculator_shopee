@@ -130,7 +130,7 @@ class _ShopeePageState extends State<ShopeePage> {
                           ),
                           const SizedBox(height: 10),
                           Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: Alignment.center,
                             child: ElevatedButton(
                               onPressed: () {
                                 final calculus = Calculus();
