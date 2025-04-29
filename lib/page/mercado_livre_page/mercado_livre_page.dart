@@ -84,6 +84,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                             ),
                           ),
                           valueListing(),
+                          const SizedBox(height: 10),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: const Text(
@@ -95,6 +96,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                             ),
                           ),
                           typeListing(),
+                          const SizedBox(height: 20),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: const Text(
@@ -246,112 +248,118 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
     );
   }
 
-  Row typeListing() {
-    return Row(
-      children: [
-        Flexible(
-          child: ListTile(
-            title: const Text(
-              'Anúncio Clássico',
-              style: TextStyle(
-                color: Colors.white,
+  Widget typeListing() {
+    return SizedBox(
+      height: 70,
+      child: Column(
+        children: [
+          Flexible(
+            child: ListTile(
+              title: const Text(
+                'Anúncio Clássico',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: Radio<TypeListing>(
+                value: TypeListing.classic,
+                groupValue: _typeListing,
+                onChanged: (TypeListing? value) {
+                  setState(() {
+                    _typeListing = value!;
+                  });
+                },
               ),
             ),
-            leading: Radio<TypeListing>(
-              value: TypeListing.classic,
-              groupValue: _typeListing,
-              onChanged: (TypeListing? value) {
-                setState(() {
-                  _typeListing = value!;
-                });
-              },
-            ),
           ),
-        ),
-        Flexible(
-          child: ListTile(
-            title: const Text(
-              'Anúncio Premium',
-              style: TextStyle(
-                color: Colors.white,
+          Flexible(
+            child: ListTile(
+              title: const Text(
+                'Anúncio Premium',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: Radio<TypeListing>(
+                value: TypeListing.premium,
+                groupValue: _typeListing,
+                onChanged: (TypeListing? value) {
+                  setState(() {
+                    _typeListing = value!;
+                  });
+                },
               ),
             ),
-            leading: Radio<TypeListing>(
-              value: TypeListing.premium,
-              groupValue: _typeListing,
-              onChanged: (TypeListing? value) {
-                setState(() {
-                  _typeListing = value!;
-                });
-              },
-            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Row typeShipping() {
-    return Row(
-      children: [
-        Flexible(
-          child: ListTile(
-            title: const Text(
-              'Mercado Envios',
-              style: TextStyle(
-                color: Colors.white,
+  Widget typeShipping() {
+    return SizedBox(
+      height: 100,
+      child: Column(
+        children: [
+          Expanded(
+            child: ListTile(
+              title: const Text(
+                'Mercado Envios',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: Radio<TypeShipping>(
+                value: TypeShipping.mercadoEnvios,
+                groupValue: _typeShipping,
+                onChanged: (TypeShipping? value) {
+                  setState(() {
+                    _typeShipping = value!;
+                  });
+                },
               ),
             ),
-            leading: Radio<TypeShipping>(
-              value: TypeShipping.mercadoEnvios,
-              groupValue: _typeShipping,
-              onChanged: (TypeShipping? value) {
-                setState(() {
-                  _typeShipping = value!;
-                });
-              },
-            ),
           ),
-        ),
-        Flexible(
-          child: ListTile(
-            title: const Text(
-              'Full',
-              style: TextStyle(
-                color: Colors.white,
+          Flexible(
+            child: ListTile(
+              title: const Text(
+                'Full',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: Radio<TypeShipping>(
+                value: TypeShipping.full,
+                groupValue: _typeShipping,
+                onChanged: (TypeShipping? value) {
+                  setState(() {
+                    _typeShipping = value!;
+                  });
+                },
               ),
             ),
-            leading: Radio<TypeShipping>(
-              value: TypeShipping.full,
-              groupValue: _typeShipping,
-              onChanged: (TypeShipping? value) {
-                setState(() {
-                  _typeShipping = value!;
-                });
-              },
-            ),
           ),
-        ),
-        Flexible(
-          child: ListTile(
-            title: const Text(
-              'Flex',
-              style: TextStyle(
-                color: Colors.white,
+          Flexible(
+            child: ListTile(
+              title: const Text(
+                'Flex',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: Radio<TypeShipping>(
+                value: TypeShipping.flex,
+                groupValue: _typeShipping,
+                onChanged: (TypeShipping? value) {
+                  setState(() {
+                    _typeShipping = value!;
+                  });
+                },
               ),
             ),
-            leading: Radio<TypeShipping>(
-              value: TypeShipping.flex,
-              groupValue: _typeShipping,
-              onChanged: (TypeShipping? value) {
-                setState(() {
-                  _typeShipping = value!;
-                });
-              },
-            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
