@@ -23,6 +23,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
   double result = 0.0;
 
   Calculus _calculus = Calculus();
+
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
@@ -30,145 +31,139 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
     return Scaffold(
       backgroundColor: Color(0xFF17181C),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Center(
-                    child: Container(
-                      height: isMobile
-                          ? null
-                          : MediaQuery.of(context).size.height * 0.85,
-                      width: isMobile ? double.infinity : 500,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Center(
+              child: Container(
+                // height: isMobile
+                //     ? null
+                //     : MediaQuery.of(context).size.height * 0.9,
+                width: isMobile ? double.infinity : 500,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 0.9),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Mercado Livre',
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Custo do Produto',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 73, 80, 84),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    custProduct(),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Valor do Anúncio',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 73, 80, 84),
+                        ),
+                      ),
+                    ),
+                    valueListing(),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Tipo do Anúncio',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 73, 80, 84),
+                        ),
+                      ),
+                    ),
+                    typeListing(),
+                    const SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Tipo de Envio',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 73, 80, 84),
+                        ),
+                      ),
+                    ),
+                    typeShipping(),
+                    Align(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _calculus.calculusMercadoLivre(
+                            _typeListing,
+                            _typeShipping,
+                            _custController.text,
+                            _listingController.text,
+                            context,
+                          );
+                        },
+                        child: const Text(
+                          'Calcular',
+                          style: TextStyle(color: Color(0xFF17181C)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    !isMobile
+                        ? SizedBox(height: 20,)
+                        : SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      height: 120,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 0.9),
+                        color: Color(0xFF332D2D),
+                        border: Border.all(
+                            color: Color(0xFF332D2D), width: 0.9),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Mercado Livre',
+                          Text(
+                            'Lucro Bruto Estimado',
                             style: TextStyle(
-                              fontSize: 30,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 172, 176, 181),
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Custo do Produto',
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              '10 %',
                               style: TextStyle(
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 73, 80, 84),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          custProduct(),
-                          const SizedBox(height: 10),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Valor do Anúncio',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 73, 80, 84),
-                              ),
-                            ),
-                          ),
-                          valueListing(),
-                          const SizedBox(height: 10),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Tipo do Anúncio',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 73, 80, 84),
-                              ),
-                            ),
-                          ),
-                          typeListing(),
-                          const SizedBox(height: 20),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Tipo de Envio',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 73, 80, 84),
-                              ),
-                            ),
-                          ),
-                          typeShipping(),
-                          Align(
-                            alignment: Alignment.center,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _calculus.calculusMercadoLivre(
-                                  _typeListing,
-                                  _typeShipping,
-                                  _custController.text,
-                                  _listingController.text,
-                                  context,
-                                );
-                              },
-                              child: const Text(
-                                'Calcular',
-                                style: TextStyle(color: Color(0xFF17181C)),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          !isMobile
-                              ? Expanded(child: SizedBox())
-                              : SizedBox(height: 10),
-                          Container(
-                            width: double.infinity,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF332D2D),
-                              border: Border.all(
-                                  color: Color(0xFF332D2D), width: 0.9),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Lucro Bruto Estimado',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 172, 176, 181),
-                                  ),
-                                ),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    '10 %',
-                                    style: TextStyle(
-                                        fontSize: 60, color: Colors.white),
-                                  ),
-                                ),
-                              ],
+                                  fontSize: 30, color: Colors.white),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -180,7 +175,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
         Text(
           'R\$ ',
           style: TextStyle(
-            fontSize: 50,
+            fontSize: 30,
             color: Colors.white,
           ),
         ),
@@ -202,7 +197,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
               hintText: '0,00',
             ),
             style: TextStyle(
-              fontSize: 50,
+              fontSize: 30,
               color: Colors.white,
             ),
           ),
@@ -217,7 +212,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
         Text(
           'R\$ ',
           style: TextStyle(
-            fontSize: 50,
+            fontSize: 30,
             color: Colors.white,
           ),
         ),
@@ -239,7 +234,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
               hintText: '0,00',
             ),
             style: TextStyle(
-              fontSize: 50,
+            fontSize: 30,
               color: Colors.white,
             ),
           ),
