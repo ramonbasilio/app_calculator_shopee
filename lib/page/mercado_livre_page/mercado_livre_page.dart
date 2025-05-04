@@ -17,12 +17,25 @@ enum TypeShipping { mercadoEnvios, full, flex }
 class _MercadoLivrePageState extends State<MercadoLivrePage> {
   final TextEditingController _custController = TextEditingController();
   final TextEditingController _listingController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
 
   TypeListing _typeListing = TypeListing.classic;
   TypeShipping _typeShipping = TypeShipping.mercadoEnvios;
-  double result = 0.0;
+  String result = '0,00';
+  bool isEnabled = false;
 
-  Calculus _calculus = Calculus();
+  Calculus calculus = Calculus();
+
+  @override
+  void initState() {
+    super.initState();
+    _listingController.addListener(() {
+      setState(() {
+        isEnabled = calculus.checkListingValue(_listingController.text);
+        if (_listingController.text.isEmpty) _weightController.clear();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +98,31 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                     const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
+                      child: !isEnabled
+                          ? Text(
+                              'Peso Produto',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Color.fromARGB(255, 73, 80, 84),
+                              ),
+                            )
+                          : RichText(
+                              text: TextSpan(
+                                children: [
+                                  //TextSpan(text: 'Peso Produto - '),
+                                  TextSpan(
+                                      text: 'Peso Produto -  Obrigado',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white))
+                                ],
+                              ),
+                            ),
+                    ),
+                    valueWeight(),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
                       child: const Text(
                         'Tipo do Anúncio',
                         style: TextStyle(
@@ -110,13 +148,19 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          _calculus.calculusMercadoLivre(
+                          final resultValue = calculus.calculusMercadoLivre(
                             _typeListing,
                             _typeShipping,
                             _custController.text,
                             _listingController.text,
                             context,
+                            _weightController.text,
                           );
+                          if (resultValue != null) {
+                            setState(() {
+                              result = resultValue;
+                            });
+                          }
                         },
                         child: const Text(
                           'Calcular',
@@ -126,15 +170,17 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                     ),
                     const SizedBox(height: 10),
                     !isMobile
-                        ? SizedBox(height: 20,)
+                        ? SizedBox(
+                            height: 20,
+                          )
                         : SizedBox(height: 10),
                     Container(
                       width: double.infinity,
                       height: 120,
                       decoration: BoxDecoration(
                         color: Color(0xFF332D2D),
-                        border: Border.all(
-                            color: Color(0xFF332D2D), width: 0.9),
+                        border:
+                            Border.all(color: Color(0xFF332D2D), width: 0.9),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(20.0),
@@ -151,9 +197,9 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              '10 %',
-                              style: TextStyle(
-                                  fontSize: 30, color: Colors.white),
+                              '$result  %',
+                              style:
+                                  TextStyle(fontSize: 30, color: Colors.white),
                             ),
                           ),
                         ],
@@ -234,7 +280,54 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
               hintText: '0,00',
             ),
             style: TextStyle(
-            fontSize: 30,
+              fontSize: 30,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row valueWeight() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 80,
+          child: TextFormField(
+            enabled: isEnabled,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                RegExp(r'[0-9,]'),
+              ),
+            ],
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: true,
+            ),
+            controller: _weightController,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              isDense: true,
+              contentPadding: EdgeInsets.zero,
+              hintText: '0,00',
+              hintStyle: TextStyle(
+                color: Colors
+                    .grey.shade800, // Define a cor para garantir visibilidade
+              ),
+            ),
+            style: TextStyle(
+              fontSize: 30,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5.0),
+          child: Text(
+            'g',
+            style: TextStyle(
+              fontSize: 30,
               color: Colors.white,
             ),
           ),
