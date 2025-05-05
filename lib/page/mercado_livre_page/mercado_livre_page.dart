@@ -196,7 +196,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
         border: Border.all(color: Color(0xFF332D2D), width: 0.9),
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -205,7 +205,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Lucro Bruto Estimado',
+                'Lucro Bruto',
                 style: TextStyle(
                   color: Color.fromARGB(255, 172, 176, 181),
                 ),
