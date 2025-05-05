@@ -70,6 +70,9 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    resultContainer(),
+                    SizedBox(height: 10),
+                    solverButton(context),
                     const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
@@ -144,73 +147,105 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                       ),
                     ),
                     typeShipping(),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final resultValue = calculus.calculusMercadoLivre(
-                            _typeListing,
-                            _typeShipping,
-                            _custController.text,
-                            _listingController.text,
-                            context,
-                            _weightController.text,
-                          );
-                          if (resultValue != null) {
-                            setState(() {
-                              result = resultValue;
-                            });
-                          }
-                        },
-                        child: const Text(
-                          'Calcular',
-                          style: TextStyle(color: Color(0xFF17181C)),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 10),
-                    !isMobile
-                        ? SizedBox(
-                            height: 20,
-                          )
-                        : SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF332D2D),
-                        border:
-                            Border.all(color: Color(0xFF332D2D), width: 0.9),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Lucro Bruto Estimado',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 172, 176, 181),
-                            ),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              '$result  %',
-                              style:
-                                  TextStyle(fontSize: 30, color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // !isMobile
+                    //     ? SizedBox(
+                    //         height: 20,
+                    //       )
+                    //     : SizedBox(height: 10),
                   ],
                 ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Align solverButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () {
+          final resultValue = calculus.calculusMercadoLivre(
+            _typeListing,
+            _typeShipping,
+            _custController.text,
+            _listingController.text,
+            context,
+            _weightController.text,
+          );
+          if (resultValue != null) {
+            setState(() {
+              result = resultValue;
+            });
+          }
+        },
+        child: const Text(
+          'Calcular',
+          style: TextStyle(color: Color(0xFF17181C)),
+        ),
+      ),
+    );
+  }
+
+  Container resultContainer() {
+    return Container(
+      width: double.infinity,
+      height: 120,
+      decoration: BoxDecoration(
+        color: Color(0xFF332D2D),
+        border: Border.all(color: Color(0xFF332D2D), width: 0.9),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Lucro Bruto Estimado',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 172, 176, 181),
+                ),
+              ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '$result  %',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Receita: R\$ 15,30',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 172, 176, 181),
+                ),
+              ),
+              Text(
+                'Taxas totais: R\$ 15,30',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 172, 176, 181),
+                ),
+              ),
+              Text(
+                'Flex (repasse): R\$ 15,30',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 172, 176, 181),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -325,7 +360,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
         Padding(
           padding: const EdgeInsets.only(left: 5.0),
           child: Text(
-            'g',
+            'kg',
             style: TextStyle(
               fontSize: 30,
               color: Colors.white,
