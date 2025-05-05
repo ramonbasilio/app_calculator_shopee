@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_v1/calculus/calculus.dart';
+import 'package:flutter_application_v1/models/mercado_livre_model.dart';
 import 'package:intl/intl.dart';
 
 class MercadoLivrePage extends StatefulWidget {
@@ -21,10 +22,11 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
 
   TypeListing _typeListing = TypeListing.classic;
   TypeShipping _typeShipping = TypeShipping.mercadoEnvios;
-  String result = '0,00';
+  //MercadoLivreModel result = MercadoLivreModel();
   bool isEnabled = false;
 
   Calculus calculus = Calculus();
+  MercadoLivreModel mercadoLivreModel = MercadoLivreModel();
 
   @override
   void initState() {
@@ -49,9 +51,6 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
             padding: const EdgeInsets.all(10),
             child: Center(
               child: Container(
-                // height: isMobile
-                //     ? null
-                //     : MediaQuery.of(context).size.height * 0.9,
                 width: isMobile ? double.infinity : 500,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 0.9),
@@ -148,11 +147,6 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                     ),
                     typeShipping(),
                     const SizedBox(height: 10),
-                    // !isMobile
-                    //     ? SizedBox(
-                    //         height: 20,
-                    //       )
-                    //     : SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -168,7 +162,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
       alignment: Alignment.center,
       child: ElevatedButton(
         onPressed: () {
-          final resultValue = calculus.calculusMercadoLivre(
+          MercadoLivreModel? resultValue = calculus.calculusMercadoLivre2(
             _typeListing,
             _typeShipping,
             _custController.text,
@@ -178,7 +172,10 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
           );
           if (resultValue != null) {
             setState(() {
-              result = resultValue;
+              mercadoLivreModel.gain = resultValue.gain;
+              mercadoLivreModel.income = resultValue.income;
+              mercadoLivreModel.totalTax = resultValue.totalTax;
+              mercadoLivreModel.flexForward = resultValue.flexForward;
             });
           }
         },
@@ -216,7 +213,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  '$result  %',
+                  '${mercadoLivreModel.gain}  %',
                   style: TextStyle(fontSize: 30, color: Colors.white),
                 ),
               ),
@@ -226,19 +223,21 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Receita: R\$ 15,30',
+                _typeShipping.name == 'flex'
+                    ? "Receita: R\$ ${mercadoLivreModel.income} + Flex (repasse)"
+                    : "Receita: R\$ ${mercadoLivreModel.income}",
                 style: TextStyle(
                   color: Color.fromARGB(255, 172, 176, 181),
                 ),
               ),
               Text(
-                'Taxas totais: R\$ 15,30',
+                "Total Taxas: R\$ ${mercadoLivreModel.totalTax}",
                 style: TextStyle(
                   color: Color.fromARGB(255, 172, 176, 181),
                 ),
               ),
               Text(
-                'Flex (repasse): R\$ 15,30',
+                'Flex (repasse): R\$ ${mercadoLivreModel.flexForward}',
                 style: TextStyle(
                   color: Color.fromARGB(255, 172, 176, 181),
                 ),
@@ -438,6 +437,10 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                 onChanged: (TypeShipping? value) {
                   setState(() {
                     _typeShipping = value!;
+                    if (value.name == 'mercadoEnvios' ||
+                        value.name == 'full') {
+                      mercadoLivreModel.flexForward = '0,00';
+                    }
                   });
                 },
               ),
@@ -457,6 +460,10 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                 onChanged: (TypeShipping? value) {
                   setState(() {
                     _typeShipping = value!;
+                    if (value.name == 'mercadoEnvios' ||
+                        value.name == 'full') {
+                      mercadoLivreModel.flexForward = '0,00';
+                    }
                   });
                 },
               ),
