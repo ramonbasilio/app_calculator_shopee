@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_v1/calculus/calculus.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'dart:html';
 
 class ShopeePage extends StatefulWidget {
   const ShopeePage({super.key});
@@ -13,8 +14,34 @@ class ShopeePage extends StatefulWidget {
 class _ShopeePageState extends State<ShopeePage> {
   final TextEditingController _custController = TextEditingController();
   final TextEditingController _gainController = TextEditingController();
-
   double result = 0.0;
+
+  void saveField(String data, String id) {
+    window.localStorage[id] = data;
+  }
+
+  String? recuperarDados(String id) {
+    return window.localStorage[id];
+  }
+
+  void clearFields() {
+    setState(() {
+      result = 0.0;
+      _custController.clear();
+      _gainController.clear();
+    });
+    window.localStorage.remove('custFieldShopee');
+    window.localStorage.remove('gainFieldShopee');
+    window.localStorage.remove('resultFieldShopee');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _custController.text = window.localStorage['custFieldShopee'] ?? '';
+    _gainController.text = window.localStorage['gainFieldShopee'] ?? '';
+    result = double.tryParse(window.localStorage['resultFieldShopee'] ?? '0') ?? 0.0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,28 +110,50 @@ class _ShopeePageState extends State<ShopeePage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final calculus = Calculus();
-                          final resultValue = calculus.calculusShopee(
-                            _custController.text,
-                            _gainController.text,
-                            context,
-                          );
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              saveField(_custController.text, 'custFieldShopee');
+                              saveField(_gainController.text, 'gainFieldShopee');
 
-                          if (resultValue != null) {
-                            setState(() {
-                              result = resultValue;
-                            });
-                          }
-                        },
-                        child: const Text(
-                          'Calcular',
-                          style: TextStyle(color: Color(0xFF17181C)),
+                              final calculus = Calculus();
+                              final resultValue = calculus.calculusShopee(
+                                _custController.text,
+                                _gainController.text,
+                                context,
+                              );
+
+                              if (resultValue != null) {
+                                setState(() {
+                                  result = resultValue;
+                                  saveField(result.toString(), 'resultFieldShopee');
+                                });
+                              }
+                            },
+                            child: const Text(
+                              'Calcular',
+                              style: TextStyle(color: Color(0xFF17181C)),
+                            ),
+                          ),
                         ),
-                      ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              clearFields();
+                            },
+                            child: const Text(
+                              'Limpar Campos',
+                              style: TextStyle(color: Color(0xFF17181C)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 10),
                     Align(

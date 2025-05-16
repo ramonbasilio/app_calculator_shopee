@@ -11,4 +11,11 @@ class MercadoLivreModel {
     this.totalTax= '0,00',
     this.flexForward = '0,00',
   ]);
+
+  void clear() {
+    gain = '0,00';
+    income = '0,00';
+    totalTax = '0,00';
+    flexForward = '0,00';
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_v1/calculus/calculus.dart';
 import 'package:flutter_application_v1/models/mercado_livre_model.dart';
 import 'package:intl/intl.dart';
+import 'dart:html';
 
 class MercadoLivrePage extends StatefulWidget {
   const MercadoLivrePage({super.key});
@@ -23,14 +24,54 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
   TypeListing _typeListing = TypeListing.classic;
   TypeShipping _typeShipping = TypeShipping.mercadoEnvios;
   //MercadoLivreModel result = MercadoLivreModel();
+  String gain = '0,00';
   bool isEnabled = false;
-
   Calculus calculus = Calculus();
   MercadoLivreModel mercadoLivreModel = MercadoLivreModel();
+
+  void saveField(String data, String id) {
+    window.localStorage[id] = data;
+  }
+
+  void saveResult(MercadoLivreModel mercadoLivreModel) {
+    window.localStorage['gain'] = mercadoLivreModel.gain;
+    window.localStorage['income'] = mercadoLivreModel.income;
+    window.localStorage['totalTax'] = mercadoLivreModel.totalTax;
+    window.localStorage['flexForward'] = mercadoLivreModel.flexForward;
+  }
+
+  String? recuperarDados(String id) {
+    return window.localStorage[id];
+  }
+
+  void clearFields() {
+    setState(() {
+      _custController.clear();
+      _listingController.clear();
+      mercadoLivreModel.clear();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    mercadoLivreModel.gain = window.localStorage['gain'] ?? '0,00';
+    mercadoLivreModel.income = window.localStorage['income'] ?? '0,00';
+    mercadoLivreModel.totalTax = window.localStorage['totalTax'] ?? '0,00';
+    mercadoLivreModel.flexForward = window.localStorage['flexForward'] ?? '0,00';
+
+    _custController.text = window.localStorage['custFieldML'] ?? '';
+    _listingController.text = window.localStorage['gainFieldML'] ?? '';
+    _weightController.text = window.localStorage['weightFieldML'] ?? '';
+    _typeListing = TypeListing.values.firstWhere(
+      (e) => e.name == (window.localStorage['typeListingML'] ?? 'classic'),
+      orElse: () => TypeListing.classic,
+    );
+    _typeShipping = TypeShipping.values.firstWhere(
+      (e) => e.name == (window.localStorage['typeShippingML'] ?? 'mercadoEnvios'),
+      orElse: () => TypeShipping.mercadoEnvios,
+    );
+
     _listingController.addListener(() {
       setState(() {
         isEnabled = calculus.checkListingValue(_listingController.text);
@@ -71,7 +112,13 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                     ),
                     resultContainer(),
                     SizedBox(height: 10),
-                    solverButton(context),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        solverButton(context),
+                        clearButton(context),
+                      ],
+                    ),
                     const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
@@ -162,6 +209,12 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
       alignment: Alignment.center,
       child: ElevatedButton(
         onPressed: () {
+          saveField(_custController.text, 'custFieldML');
+          saveField(_listingController.text, 'gainFieldML');
+          saveField(_weightController.text, 'weightFieldML');
+          saveField(_typeListing.name, 'typeListingML');
+          saveField(_typeShipping.name, 'typeShippingML');
+
           MercadoLivreModel? resultValue = calculus.calculusMercadoLivre2(
             _typeListing,
             _typeShipping,
@@ -177,6 +230,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
               mercadoLivreModel.totalTax = resultValue.totalTax;
               mercadoLivreModel.flexForward = resultValue.flexForward;
             });
+            saveResult(mercadoLivreModel);
           }
         },
         child: const Text(
@@ -437,8 +491,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                 onChanged: (TypeShipping? value) {
                   setState(() {
                     _typeShipping = value!;
-                    if (value.name == 'mercadoEnvios' ||
-                        value.name == 'full') {
+                    if (value.name == 'mercadoEnvios' || value.name == 'full') {
                       mercadoLivreModel.flexForward = '0,00';
                     }
                   });
@@ -460,8 +513,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
                 onChanged: (TypeShipping? value) {
                   setState(() {
                     _typeShipping = value!;
-                    if (value.name == 'mercadoEnvios' ||
-                        value.name == 'full') {
+                    if (value.name == 'mercadoEnvios' || value.name == 'full') {
                       mercadoLivreModel.flexForward = '0,00';
                     }
                   });
@@ -489,6 +541,21 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Align clearButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () {
+          clearFields();
+        },
+        child: const Text(
+          'Limpar Campos ',
+          style: TextStyle(color: Color(0xFF17181C)),
+        ),
       ),
     );
   }

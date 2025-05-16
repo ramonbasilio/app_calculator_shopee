@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_v1/alerts/alerts.dart';
 import 'package:flutter_application_v1/calculus/tableMercadoLivreTax.dart';
 import 'package:flutter_application_v1/models/mercado_livre_model.dart';
+import 'package:flutter_application_v1/models/shopee_model.dart';
 import 'package:flutter_application_v1/page/mercado_livre_page/mercado_livre_page.dart';
 
 class Calculus {
-  Tablemercadolivretax _tablemercadolivretax = Tablemercadolivretax();
+  Tablemercadolivretax tablemercadolivretax = Tablemercadolivretax();
 
   double? calculusShopee(
     String cust,
@@ -13,6 +14,8 @@ class Calculus {
     BuildContext context,
   ) {
     double anuncio = 0.0;
+    double tax = 0.0;
+    double income = 0.0;
     Alerts alerts = Alerts();
     try {
       double _gain = double.parse(gain.replaceAll(',', '.'));
@@ -26,7 +29,49 @@ class Calculus {
         alerts.errorGain(context);
         return null;
       }
+      tax = anuncio - _cust;
+      income = anuncio - tax;
+
       return anuncio;
+    } catch (e) {
+      alerts.errorConvertDouble(context);
+      return null;
+    }
+  }
+
+  ShopeeModel? calculusShopee2(
+    String cust,
+    String gain,
+    BuildContext context,
+  ) {
+    double anuncio = 0.0;
+    double tax = 0.0;
+    double income = 0.0;
+    double percentTax = 0.0;
+    Alerts alerts = Alerts();
+    try {
+      double _gain = double.parse(gain.replaceAll(',', '.'));
+      double _cust = double.parse(cust.replaceAll(',', '.'));
+      if ((_gain / 100) - 0.8 == 0) {
+        alerts.errorGain(context);
+        return null;
+      }
+      anuncio = ((-4 - _cust) / ((_gain / 100) - 0.8));
+      if (anuncio < 0) {
+        alerts.errorGain(context);
+        return null;
+      }
+      tax = anuncio - _cust;
+      income = anuncio - tax;
+      percentTax = (tax / anuncio) * 100;
+
+      ShopeeModel shopeeResult = ShopeeModel(
+        income.toStringAsFixed(2).replaceAll('.', ','),
+        tax.toStringAsFixed(2).replaceAll('.', ','),
+        percentTax.toStringAsFixed(2).replaceAll('.', ','),
+      );
+
+      return shopeeResult;
     } catch (e) {
       alerts.errorConvertDouble(context);
       return null;
@@ -82,7 +127,7 @@ class Calculus {
             typeShipping.name == 'full') {
           if (weight != null) {
             double weightDouble = double.parse(weight.replaceAll(',', '.'));
-            totalTax = _tablemercadolivretax.taxMercadoLivreFull(weightDouble);
+            totalTax = tablemercadolivretax.taxMercadoLivreFull(weightDouble);
           }
         }
         gain = ((listing - totalTax - cust) / listing) * 100;
@@ -140,12 +185,13 @@ class Calculus {
         }
         return mercadoLivreModel;
       }
+
       if (listing >= 79) {
         if (typeShipping.name == 'mercadoEnvios' ||
             typeShipping.name == 'full') {
           if (weight != null) {
             double weightDouble = double.parse(weight.replaceAll(',', '.'));
-            totalTax = _tablemercadolivretax.taxMercadoLivreFull(weightDouble);
+            totalTax = tablemercadolivretax.taxMercadoLivreFull(weightDouble);
           }
         }
         gain = ((listing - totalTax - cust) / listing) * 100;

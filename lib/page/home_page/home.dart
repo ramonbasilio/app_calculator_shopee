@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_v1/page/amazon_page/amazon_page.dart';
 import 'package:flutter_application_v1/page/mercado_livre_page/mercado_livre_page.dart';
 import 'package:flutter_application_v1/page/shopee_page/shopee_page.dart';
+import 'package:flutter_application_v1/page/shopee_page/shopee_page2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
   static const List<Widget> widgetOptions = <Widget>[
-    ShopeePage(),
+    ShopeePage2(),
     MercadoLivrePage(),
     AmazonPage(),
   ];
