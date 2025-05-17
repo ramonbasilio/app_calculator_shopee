@@ -139,7 +139,7 @@ class _HomePageTestState extends State<HomePageTest> {
     return Scaffold(
             appBar: AppBar(
         title: const Text(
-          'Calculadora de Taxas - TESTE',
+          'Calculadora de Taxas',
           style: TextStyle(
             color: Colors.white,
             fontSize: 30,

@@ -24,7 +24,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
   TypeListing _typeListing = TypeListing.classic;
   TypeShipping _typeShipping = TypeShipping.mercadoEnvios;
   //MercadoLivreModel result = MercadoLivreModel();
-  String gain = '0,00';
+  //String gain = '0,00';
   bool isEnabled = false;
   Calculus calculus = Calculus();
   MercadoLivreModel mercadoLivreModel = MercadoLivreModel();
@@ -63,6 +63,7 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
     _custController.text = window.localStorage['custFieldML'] ?? '';
     _listingController.text = window.localStorage['gainFieldML'] ?? '';
     _weightController.text = window.localStorage['weightFieldML'] ?? '';
+
     _typeListing = TypeListing.values.firstWhere(
       (e) => e.name == (window.localStorage['typeListingML'] ?? 'classic'),
       orElse: () => TypeListing.classic,

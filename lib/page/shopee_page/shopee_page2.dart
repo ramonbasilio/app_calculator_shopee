@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_v1/calculus/calculus.dart';
 import 'package:flutter_application_v1/models/shopee_model.dart';
+import 'package:flutter_application_v1/page/mercado_livre_page/mercado_livre_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'dart:html';
@@ -12,30 +13,35 @@ class ShopeePage2 extends StatefulWidget {
   State<ShopeePage2> createState() => _ShopeePage2State();
 }
 
+enum TypeTax { freeShipping, noFreeShipping }
+
 class _ShopeePage2State extends State<ShopeePage2> {
   final TextEditingController _custController = TextEditingController();
   final TextEditingController _gainController = TextEditingController();
-  double result = 0.0;
-
   ShopeeModel shopeeModel = ShopeeModel();
+  TypeTax _typeTax = TypeTax.freeShipping;
+
 
   void saveField(String data, String id) {
     window.localStorage[id] = data;
   }
 
-  String? recuperarDados(String id) {
-    return window.localStorage[id];
+  void saveResult(ShopeeModel data) {
+    window.localStorage['incomeFieldShopee'] = data.income;
+    window.localStorage['totalTaxFieldShopee'] = data.totalTax;
+    window.localStorage['percentTaxFieldShopee'] = data.grossProfit;
+    window.localStorage['listingFieldShopee'] = data.listing;
+    window.localStorage['grossProfitFieldShopee'] = data.grossProfit;
   }
 
   void clearFields() {
     setState(() {
-      result = 0.0;
       _custController.clear();
       _gainController.clear();
+      shopeeModel.clear();
     });
     window.localStorage.remove('custFieldShopee');
     window.localStorage.remove('gainFieldShopee');
-    window.localStorage.remove('resultFieldShopee');
   }
 
   @override
@@ -43,8 +49,11 @@ class _ShopeePage2State extends State<ShopeePage2> {
     super.initState();
     _custController.text = window.localStorage['custFieldShopee'] ?? '';
     _gainController.text = window.localStorage['gainFieldShopee'] ?? '';
-    result =
-        double.tryParse(window.localStorage['resultFieldShopee'] ?? '0') ?? 0.0;
+    shopeeModel.income = window.localStorage['incomeFieldShopee'] ?? '0,00';
+    shopeeModel.totalTax = window.localStorage['totalTaxFieldShopee'] ?? '0,00';
+    shopeeModel.grossProfit =
+        window.localStorage['grossProfitFieldShopee'] ?? '0,00';
+    shopeeModel.listing = window.localStorage['listingFieldShopee'] ?? '0,00';
   }
 
   @override
@@ -94,19 +103,26 @@ class _ShopeePage2State extends State<ShopeePage2> {
                                   _custController.text, 'custFieldShopee');
                               saveField(
                                   _gainController.text, 'gainFieldShopee');
-
+            
                               final calculus = Calculus();
-                              final resultValue = calculus.calculusShopee(
+                              ShopeeModel? resultValue =
+                                  calculus.calculusShopee2(
                                 _custController.text,
                                 _gainController.text,
                                 context,
+                                _typeTax == TypeTax.freeShipping
+                                    ? true
+                                    : false,
                               );
 
                               if (resultValue != null) {
                                 setState(() {
-                                  result = resultValue;
-                                  saveField(
-                                      result.toString(), 'resultFieldShopee');
+                                  shopeeModel.income = resultValue.income;
+                                  shopeeModel.totalTax = resultValue.totalTax;
+                                  shopeeModel.grossProfit =
+                                      resultValue.grossProfit;
+                                  shopeeModel.listing = resultValue.listing;
+                                  saveResult(resultValue);
                                 });
                               }
                             },
@@ -208,8 +224,18 @@ class _ShopeePage2State extends State<ShopeePage2> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Programa de frete grátis?',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 73, 80, 84),
+                        ),
+                      ),
+                    ),
+                    typeTax()
                     //!isMobile ? Expanded(child: SizedBox()) : SizedBox(height: 10),
                   ],
                 ),
@@ -217,6 +243,54 @@ class _ShopeePage2State extends State<ShopeePage2> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget typeTax() {
+    return SizedBox(
+      height: 70,
+      child: Column(
+        children: [
+          Flexible(
+            child: ListTile(
+              title: const Text(
+                'Sim (20% de taxa + R\$ 4,00)',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: Radio<TypeTax>(
+                value: TypeTax.freeShipping,
+                groupValue: _typeTax,
+                onChanged: (TypeTax? value) {
+                  setState(() {
+                    _typeTax = value!;
+                  });
+                },
+              ),
+            ),
+          ),
+          Flexible(
+            child: ListTile(
+              title: const Text(
+                'Não (14% de taxa + R\$ 4,00)',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: Radio<TypeTax>(
+                value: TypeTax.noFreeShipping,
+                groupValue: _typeTax,
+                onChanged: (TypeTax? value) {
+                  setState(() {
+                    _typeTax = value!;
+                  });
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -247,8 +321,8 @@ class _ShopeePage2State extends State<ShopeePage2> {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$')
-                      .format(result),
+                  NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(
+                      double.parse(shopeeModel.listing.replaceAll(',', '.'))),
                   style: TextStyle(fontSize: 30, color: Colors.white),
                 ),
               ),
@@ -270,7 +344,7 @@ class _ShopeePage2State extends State<ShopeePage2> {
                 ),
               ),
               Text(
-                'Percentual Taxas: ${shopeeModel.percentTax} %',
+                'Lucro (Bruto): R\$ ${shopeeModel.grossProfit}',
                 style: TextStyle(
                   color: Color.fromARGB(255, 172, 176, 181),
                 ),

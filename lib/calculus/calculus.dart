@@ -43,32 +43,44 @@ class Calculus {
     String cust,
     String gain,
     BuildContext context,
+    bool isFreeShipping,
   ) {
     double anuncio = 0.0;
     double tax = 0.0;
     double income = 0.0;
-    double percentTax = 0.0;
+    double grossProfit = 0.0;
+    double taxShipping1 = 0.8;
+    double taxShipping2 = 0.2;
+
+    if (!isFreeShipping) {
+      taxShipping1 = 0.86;
+      taxShipping2 = 0.14;
+    } 
+
     Alerts alerts = Alerts();
     try {
       double _gain = double.parse(gain.replaceAll(',', '.'));
       double _cust = double.parse(cust.replaceAll(',', '.'));
+
+
       if ((_gain / 100) - 0.8 == 0) {
         alerts.errorGain(context);
         return null;
       }
-      anuncio = ((-4 - _cust) / ((_gain / 100) - 0.8));
+      anuncio = ((- 4 - _cust) / ((_gain / 100) - taxShipping1));
       if (anuncio < 0) {
         alerts.errorGain(context);
         return null;
       }
-      tax = anuncio - _cust;
-      income = anuncio - tax;
-      percentTax = (tax / anuncio) * 100;
+      income = (anuncio - (anuncio*taxShipping2)) - 4;
+      tax = anuncio - income;
+      grossProfit = income - _cust;
 
       ShopeeModel shopeeResult = ShopeeModel(
         income.toStringAsFixed(2).replaceAll('.', ','),
         tax.toStringAsFixed(2).replaceAll('.', ','),
-        percentTax.toStringAsFixed(2).replaceAll('.', ','),
+        grossProfit.toStringAsFixed(2).replaceAll('.', ','),
+        anuncio.toStringAsFixed(2),
       );
 
       return shopeeResult;
