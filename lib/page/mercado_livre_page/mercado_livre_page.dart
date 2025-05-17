@@ -23,8 +23,6 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
 
   TypeListing _typeListing = TypeListing.classic;
   TypeShipping _typeShipping = TypeShipping.mercadoEnvios;
-  //MercadoLivreModel result = MercadoLivreModel();
-  //String gain = '0,00';
   bool isEnabled = false;
   Calculus calculus = Calculus();
   MercadoLivreModel mercadoLivreModel = MercadoLivreModel();
@@ -49,6 +47,15 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
       _custController.clear();
       _listingController.clear();
       mercadoLivreModel.clear();
+      window.localStorage.remove('custFieldML');
+      window.localStorage.remove('gainFieldML');
+      window.localStorage.remove('weightFieldML');
+      window.localStorage.remove('typeListingML');
+      window.localStorage.remove('typeShippingML');
+      window.localStorage.remove('totalTax');
+      window.localStorage.remove('flexForward');
+      window.localStorage.remove('gain');
+      window.localStorage.remove('income');
     });
   }
 
@@ -58,7 +65,8 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
     mercadoLivreModel.gain = window.localStorage['gain'] ?? '0,00';
     mercadoLivreModel.income = window.localStorage['income'] ?? '0,00';
     mercadoLivreModel.totalTax = window.localStorage['totalTax'] ?? '0,00';
-    mercadoLivreModel.flexForward = window.localStorage['flexForward'] ?? '0,00';
+    mercadoLivreModel.flexForward =
+        window.localStorage['flexForward'] ?? '0,00';
 
     _custController.text = window.localStorage['custFieldML'] ?? '';
     _listingController.text = window.localStorage['gainFieldML'] ?? '';
@@ -69,7 +77,8 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
       orElse: () => TypeListing.classic,
     );
     _typeShipping = TypeShipping.values.firstWhere(
-      (e) => e.name == (window.localStorage['typeShippingML'] ?? 'mercadoEnvios'),
+      (e) =>
+          e.name == (window.localStorage['typeShippingML'] ?? 'mercadoEnvios'),
       orElse: () => TypeShipping.mercadoEnvios,
     );
 

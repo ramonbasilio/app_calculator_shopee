@@ -42,6 +42,10 @@ class _ShopeePage2State extends State<ShopeePage2> {
     });
     window.localStorage.remove('custFieldShopee');
     window.localStorage.remove('gainFieldShopee');
+    window.localStorage.remove('incomeFieldShopee');
+    window.localStorage.remove('totalTaxFieldShopee');
+    window.localStorage.remove('grossProfitFieldShopee');
+    window.localStorage.remove('listingFieldShopee');
   }
 
   @override
