@@ -18,9 +18,9 @@ enum TypeTax { freeShipping, noFreeShipping }
 class _ShopeePage2State extends State<ShopeePage2> {
   final TextEditingController _custController = TextEditingController();
   final TextEditingController _gainController = TextEditingController();
+  final TextEditingController _tributeController = TextEditingController();
   ShopeeModel shopeeModel = ShopeeModel();
   TypeTax _typeTax = TypeTax.freeShipping;
-
 
   void saveField(String data, String id) {
     window.localStorage[id] = data;
@@ -32,6 +32,7 @@ class _ShopeePage2State extends State<ShopeePage2> {
     window.localStorage['percentTaxFieldShopee'] = data.grossProfit;
     window.localStorage['listingFieldShopee'] = data.listing;
     window.localStorage['grossProfitFieldShopee'] = data.grossProfit;
+    window.localStorage['tributeFieldShopee'] = data.tribute;
   }
 
   void clearFields() {
@@ -46,6 +47,8 @@ class _ShopeePage2State extends State<ShopeePage2> {
     window.localStorage.remove('totalTaxFieldShopee');
     window.localStorage.remove('grossProfitFieldShopee');
     window.localStorage.remove('listingFieldShopee');
+    window.localStorage.remove('tributeFieldShopee');
+    _tributeController.text = '0,00';
   }
 
   @override
@@ -58,6 +61,7 @@ class _ShopeePage2State extends State<ShopeePage2> {
     shopeeModel.grossProfit =
         window.localStorage['grossProfitFieldShopee'] ?? '0,00';
     shopeeModel.listing = window.localStorage['listingFieldShopee'] ?? '0,00';
+    _tributeController.text = window.localStorage['tributeFieldShopee'] ?? '6,00';
   }
 
   @override
@@ -107,16 +111,15 @@ class _ShopeePage2State extends State<ShopeePage2> {
                                   _custController.text, 'custFieldShopee');
                               saveField(
                                   _gainController.text, 'gainFieldShopee');
-            
+
                               final calculus = Calculus();
                               ShopeeModel? resultValue =
                                   calculus.calculusShopee2(
                                 _custController.text,
                                 _gainController.text,
                                 context,
-                                _typeTax == TypeTax.freeShipping
-                                    ? true
-                                    : false,
+                                _typeTax == TypeTax.freeShipping ? true : false,
+                                _tributeController.text,
                               );
 
                               if (resultValue != null) {
@@ -127,6 +130,8 @@ class _ShopeePage2State extends State<ShopeePage2> {
                                       resultValue.grossProfit;
                                   shopeeModel.listing = resultValue.listing;
                                   saveResult(resultValue);
+                                  shopeeModel.tribute =
+                                      resultValue.tribute;
                                 });
                               }
                             },
@@ -229,6 +234,46 @@ class _ShopeePage2State extends State<ShopeePage2> {
                       ],
                     ),
                     const SizedBox(height: 10),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Imposto',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 73, 80, 84),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '% ',
+                          style: TextStyle(fontSize: 30, color: Colors.white),
+                        ),
+                        Flexible(
+                          child: TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9,]'),
+                              ),
+                            ],
+                            keyboardType: TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            controller: _tributeController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                              hintText: '0',
+                            ),
+                            style: TextStyle(fontSize: 30, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+
                     Align(
                       alignment: Alignment.centerLeft,
                       child: const Text(
@@ -259,7 +304,7 @@ class _ShopeePage2State extends State<ShopeePage2> {
           Flexible(
             child: ListTile(
               title: const Text(
-                'Sim (20% de taxa + R\$ 4,00)',
+                'Sim (20% + R\$ 4,00)',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -278,7 +323,7 @@ class _ShopeePage2State extends State<ShopeePage2> {
           Flexible(
             child: ListTile(
               title: const Text(
-                'Não (14% de taxa + R\$ 4,00)',
+                'Não (14% + R\$ 4,00)',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -302,7 +347,7 @@ class _ShopeePage2State extends State<ShopeePage2> {
   Container resultContainer() {
     return Container(
       width: double.infinity,
-      height: 120,
+      height: 130,
       decoration: BoxDecoration(
         color: Color(0xFF332D2D),
         border: Border.all(color: Color(0xFF332D2D), width: 0.9),
@@ -348,7 +393,13 @@ class _ShopeePage2State extends State<ShopeePage2> {
                 ),
               ),
               Text(
-                'Lucro (Bruto): R\$ ${shopeeModel.grossProfit}',
+                'Lucro: R\$ ${shopeeModel.grossProfit}',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 172, 176, 181),
+                ),
+              ),
+              Text(
+                'Imposto: R\$ ${shopeeModel.tribute}',
                 style: TextStyle(
                   color: Color.fromARGB(255, 172, 176, 181),
                 ),

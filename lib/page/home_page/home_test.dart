@@ -46,7 +46,7 @@ class _HomePageTestState extends State<HomePageTest> {
         backgroundColor: Color(0xFF332D2D), //0xFF17181C
         centerTitle: true,
       ),
-      body: Center(child: widgetOptions.elementAt(selectedIndex)),
+      body: ShopeePage2(),
       bottomNavigationBar: BottomNavigationBar(
       
         type: BottomNavigationBarType.fixed,

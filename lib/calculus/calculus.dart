@@ -44,10 +44,12 @@ class Calculus {
     String gain,
     BuildContext context,
     bool isFreeShipping,
+    String tribute,
   ) {
     double anuncio = 0.0;
     double tax = 0.0;
     double income = 0.0;
+    double tributeValue = 0.0;
     double grossProfit = 0.0;
     double taxShipping1 = 0.8;
     double taxShipping2 = 0.2;
@@ -61,26 +63,30 @@ class Calculus {
     try {
       double _gain = double.parse(gain.replaceAll(',', '.'));
       double _cust = double.parse(cust.replaceAll(',', '.'));
+      double _tribute = double.parse(tribute.replaceAll(',', '.'));
 
 
       if ((_gain / 100) - 0.8 == 0) {
         alerts.errorGain(context);
         return null;
       }
-      anuncio = ((- 4 - _cust) / ((_gain / 100) - taxShipping1));
+      anuncio = ((- 4 - _cust) / ((_gain / 100) - taxShipping1 + (_tribute/100)));
       if (anuncio < 0) {
         alerts.errorGain(context);
         return null;
       }
       income = (anuncio - (anuncio*taxShipping2)) - 4;
       tax = anuncio - income;
-      grossProfit = income - _cust;
+      grossProfit = income - _cust - (_tribute / 100) * anuncio;
+      tributeValue = (_tribute / 100) * anuncio;
+      print('Imposto: $tributeValue');
 
       ShopeeModel shopeeResult = ShopeeModel(
         income.toStringAsFixed(2).replaceAll('.', ','),
         tax.toStringAsFixed(2).replaceAll('.', ','),
         grossProfit.toStringAsFixed(2).replaceAll('.', ','),
         anuncio.toStringAsFixed(2),
+        tributeValue.toStringAsFixed(2).replaceAll('.', ','),
       );
 
       return shopeeResult;
@@ -139,7 +145,7 @@ class Calculus {
             typeShipping.name == 'full') {
           if (weight != null) {
             double weightDouble = double.parse(weight.replaceAll(',', '.'));
-            totalTax = tablemercadolivretax.taxMercadoLivreFull(weightDouble);
+            totalTax = tablemercadolivretax.taxMercadoLivreFull(weightDouble)!;
           }
         }
         gain = ((listing - totalTax - cust) / listing) * 100;
@@ -165,17 +171,21 @@ class Calculus {
 
     //double taxTypeListing = 0.0;
     //double taxTypeShipping = 0.0;
-    double totalTax = 0.0;
+    double? totalTax = 0.0;
     double gain = 0.0;
     Alerts alerts = Alerts();
     try {
       double listing = double.parse(listingStr.replaceAll(',', '.'));
       double cust = double.parse(custStr.replaceAll(',', '.'));
+
+
       if (typeListing.name == 'classic') {
         totalTax = listing * 0.14;
       } else {
         totalTax = listing * 0.19;
       }
+
+      // ANUNCIO MENOR QUE 79
       if (listing < 79) {
         if (listing > 8 && listing <= 28.9) {
           totalTax += 6.25;
@@ -198,15 +208,17 @@ class Calculus {
         return mercadoLivreModel;
       }
 
+      // ANUNCIO IGUAL OU MAIOR QUE 79
       if (listing >= 79) {
         if (typeShipping.name == 'mercadoEnvios' ||
             typeShipping.name == 'full') {
           if (weight != null) {
+            print('Peso: $weight');
             double weightDouble = double.parse(weight.replaceAll(',', '.'));
             totalTax = tablemercadolivretax.taxMercadoLivreFull(weightDouble);
           }
         }
-        gain = ((listing - totalTax - cust) / listing) * 100;
+        gain = ((listing - totalTax! - cust) / listing) * 100;
         MercadoLivreModel mercadoLivreModel = MercadoLivreModel(
           gain.toStringAsFixed(2).replaceAll('.', ','),
           calculusIncome(listing, totalTax),
@@ -220,10 +232,10 @@ class Calculus {
     return null;
   }
 
-  bool checkListingValue(String? value) {
+  bool checkListingValue(String? value, TextEditingController controller) {
     if (value!.isNotEmpty) {
       double valueDouble = double.parse(value.replaceAll(',', '.'));
-      if (valueDouble >= 79) {
+      if (valueDouble >= 79 && controller.text.isNotEmpty) {
         return true;
       } else {
         return false;

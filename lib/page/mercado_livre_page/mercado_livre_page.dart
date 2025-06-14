@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_v1/calculus/calculus.dart';
 import 'package:flutter_application_v1/models/mercado_livre_model.dart';
-import 'package:intl/intl.dart';
 import 'dart:html';
 
 class MercadoLivrePage extends StatefulWidget {
@@ -62,6 +61,9 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
   @override
   void initState() {
     super.initState();
+    if (_listingController.text.isNotEmpty) {
+      isEnabled = true;
+    }
     mercadoLivreModel.gain = window.localStorage['gain'] ?? '0,00';
     mercadoLivreModel.income = window.localStorage['income'] ?? '0,00';
     mercadoLivreModel.totalTax = window.localStorage['totalTax'] ?? '0,00';
@@ -84,7 +86,8 @@ class _MercadoLivrePageState extends State<MercadoLivrePage> {
 
     _listingController.addListener(() {
       setState(() {
-        isEnabled = calculus.checkListingValue(_listingController.text);
+        isEnabled = calculus.checkListingValue(
+            _listingController.text, _listingController);
         if (_listingController.text.isEmpty) _weightController.clear();
       });
     });
