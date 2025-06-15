@@ -57,26 +57,57 @@ class Calculus {
     if (!isFreeShipping) {
       taxShipping1 = 0.86;
       taxShipping2 = 0.14;
-    } 
+    }
+
+    const double eps = 1e-6; // limite mínimo para o denominador
+    const double maxAdPrice = 1e6; // limite superior plausível (ex.: 50 000)
 
     Alerts alerts = Alerts();
     try {
+      print('custo recebido: ${cust}');
       double _gain = double.parse(gain.replaceAll(',', '.'));
       double _cust = double.parse(cust.replaceAll(',', '.'));
       double _tribute = double.parse(tribute.replaceAll(',', '.'));
 
+      // Denominador isolado
+      final double denom = (_gain / 100) - taxShipping1 + (_tribute / 100);
 
-      if ((_gain / 100) - 0.8 == 0) {
-        alerts.errorGain(context);
+      // 1. Proteção contra divisão indefinida ou infinita
+      if (denom.abs() < eps) {
+        alerts.errorTrubuteGain(context); // ou lance uma Exception
         return null;
       }
-      anuncio = ((- 4 - _cust) / ((_gain / 100) - taxShipping1 + (_tribute/100)));
-      if (anuncio < 0) {
-        alerts.errorGain(context);
+
+      // 2. Cálculo seguro
+      double anuncio = (-4 - _cust) / denom;
+
+      // if ((_gain / 100) - taxShipping1 + (_tribute / 100) == 0) {
+      //   alerts.errorGain(context);
+      //   return null;
+      // }
+
+      if (anuncio > maxAdPrice) {
+        alerts.errorCust(context);
         return null;
       }
-      income = (anuncio - (anuncio*taxShipping2)) - 4;
+
+      if (anuncio.isNaN || anuncio.isInfinite || anuncio <= 0) {
+        alerts.errorTrubuteGain(context);
+        return null;
+      }
+      // anuncio =
+      //     ((-4 - _cust) / ((_gain / 100) - taxShipping1 + (_tribute / 100)));
+      // if (anuncio < 0) {
+      //   print('deu erro aqui...4');
+      //   alerts.errorGain(context);
+      //   return null;
+      // }
+
+      income = (anuncio - (anuncio * taxShipping2)) - 4;
       tax = anuncio - income;
+      if (tax >= 100) {
+        tax = 104;
+      }
       grossProfit = income - _cust - (_tribute / 100) * anuncio;
       tributeValue = (_tribute / 100) * anuncio;
       print('Imposto: $tributeValue');
@@ -177,7 +208,6 @@ class Calculus {
     try {
       double listing = double.parse(listingStr.replaceAll(',', '.'));
       double cust = double.parse(custStr.replaceAll(',', '.'));
-
 
       if (typeListing.name == 'classic') {
         totalTax = listing * 0.14;

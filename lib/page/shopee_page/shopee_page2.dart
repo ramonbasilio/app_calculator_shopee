@@ -5,6 +5,8 @@ import 'package:flutter_application_v1/page/mercado_livre_page/mercado_livre_pag
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'dart:html';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+
 
 class ShopeePage2 extends StatefulWidget {
   const ShopeePage2({super.key});
@@ -175,6 +177,13 @@ class _ShopeePage2State extends State<ShopeePage2> {
                         Flexible(
                           child: TextFormField(
                             inputFormatters: [
+                              CurrencyTextInputFormatter.currency(
+                                locale: 'br',
+                                symbol: 'R\$'
+                                
+                      
+
+                              ),
                               FilteringTextInputFormatter.allow(
                                 RegExp(r'[0-9,]'),
                               ),
